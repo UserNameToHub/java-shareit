@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     }
 
     private void checkOwner(Long ownerId, Long itemId) {
-        if (repository.findById(itemId).get().getOwner().getId().longValue() != itemId.longValue()) {
+        if (repository.findById(itemId).get().getOwner().getId().compareTo(ownerId) != 0) {
             throw new NotFoundException(String.format("Пользователь с id %d не является владельцем вещи с id %d.",
                     ownerId, itemId));
         }
