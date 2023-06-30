@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemTo;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
 import ru.practicum.shareit.item.repository.ItemRepositoryImpl;
+import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepositoryImpl;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     private final ItemRepositoryImpl repository;
     private final UserRepositoryImpl userRepository;
     private final ItemDtoMapper mapper;
-    private static Long id = 1L;
+    private Long id = 1L;
 
     @Override
     public List<ItemTo> findAllById(Long idOwner) {
@@ -98,7 +99,9 @@ public class ItemServiceImpl implements ItemService<Long> {
     }
 
     private void checkOwner(Long ownerId, Long itemId) {
-        if (repository.findById(itemId).get().getOwner().getId() != ownerId) {
+        Item item = repository.findById(itemId).get();
+        User owner = item.getOwner();
+        if (owner.getId() != ownerId) {
             throw new NotFoundException(String.format("Пользователь с id %d не является владельцем вещи с id %d.",
                     ownerId, itemId));
         }

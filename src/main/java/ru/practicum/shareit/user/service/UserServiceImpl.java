@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService<Long> {
     private final ItemRepositoryImpl itemRepository;
     private final UserDtoMapper mapper;
 
-    private static Long id = 1L;
+    private Long id = 1L;
 
     @Override
     public List<UserTo> findAll() {
