@@ -13,6 +13,6 @@ public interface CrudRepository<T, ID> {
     T update(T type);
 
     T create(T type);
-    
+
     boolean existsById(ID idType);
 }

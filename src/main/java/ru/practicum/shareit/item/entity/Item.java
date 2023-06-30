@@ -19,7 +19,7 @@ public class Item {
     private User owner;
     private String name;
     private String description;
-    private Boolean Available;
+    private Boolean available;
     private ItemRequest request;
     private Set<Feedback> feedbacks;
 }

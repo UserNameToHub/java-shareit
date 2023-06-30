@@ -26,7 +26,7 @@ public class ItemDtoMapper implements BaseTo<Item, ItemTo> {
                 .owner(null)
                 .name(type.getName())
                 .description(type.getDescription())
-                .Available(type.getAvailable())
+                .available(type.getAvailable())
                 .build();
     }
 }

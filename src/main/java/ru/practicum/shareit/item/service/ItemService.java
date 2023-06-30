@@ -18,4 +18,3 @@ public interface ItemService<ID> extends BaseService<ItemTo, ID> {
 
     ItemTo create(ItemTo type, ID ownerId);
 }
-
