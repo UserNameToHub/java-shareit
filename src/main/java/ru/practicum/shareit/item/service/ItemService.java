@@ -9,9 +9,13 @@ import java.util.List;
 @Service
 public interface ItemService<ID> extends BaseService<ItemTo, ID> {
     List<ItemTo> findAllById(ID idOwner);
+
     List<ItemTo> findByText(String text);
+
     void delete(ID idType, ID idOwner);
+
     ItemTo update(ItemTo type, ID itemId, ID ownerId);
+
     ItemTo create(ItemTo type, ID ownerId);
 }
 

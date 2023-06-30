@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface UserService<ID> extends BaseService<UserTo, ID> {
     List<UserTo> findAll();
+
     void delete(ID idType);
+
     UserTo update(UserTo type, Long idType);
+
     UserTo create(UserTo type);
 }
