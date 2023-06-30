@@ -30,7 +30,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(NotUniqueException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> NotUniqueExceptionHandler(final NotUniqueException e) {
+    public Map<String, String> notUniqueExceptionHandler(final NotUniqueException e) {
         return Map.of("errorMessage", e.getMessage());
     }
 }

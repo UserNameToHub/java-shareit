@@ -13,7 +13,7 @@ public class ItemDtoMapper implements BaseTo<Item, ItemTo> {
                 .id(type.getId())
                 .name(type.getName())
                 .description(type.getDescription())
-                .Available(type.getAvailable())
+                .available(type.getAvailable())
                 .build();
     }
 

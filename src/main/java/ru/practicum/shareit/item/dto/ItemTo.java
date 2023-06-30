@@ -26,5 +26,5 @@ public class ItemTo {
     private String description;
 
     @NotNull(message = "Данное поле не может быть пустым.")
-    private Boolean Available;
+    private Boolean available;
 }
