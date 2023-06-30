@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     private final ItemRepositoryImpl repository;
     private final UserRepositoryImpl userRepository;
     private final ItemDtoMapper mapper;
-    private static Long id = 1l;
+    private static Long id = 1L;
 
     @Override
     public List<ItemTo> findAllById(Long idOwner) {
