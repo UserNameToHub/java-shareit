@@ -21,7 +21,7 @@ public class ItemRepositoryImpl implements ItemRepository<Long> {
     public List<Item> findAllById(Long idOwner) {
 
         return repository.values().stream()
-                .filter(item -> item.getOwner().getId().compareTo(idOwner) != 0)
+                .filter(item -> item.getOwner().getId().compareTo(idOwner) == 0)
                 .collect(Collectors.toList());
     }
 

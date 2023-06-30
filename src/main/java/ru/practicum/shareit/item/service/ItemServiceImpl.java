@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.dto.ItemTo;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
 import ru.practicum.shareit.item.repository.ItemRepositoryImpl;
-import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepositoryImpl;
 
 import java.util.ArrayList;
