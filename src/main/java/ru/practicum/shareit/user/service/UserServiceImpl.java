@@ -30,14 +30,14 @@ public class UserServiceImpl implements UserService<Long> {
     public List<UserTo> findAll() {
         log.info("Запрос на получение всех пользователей.");
         return userRepository.findAll().stream()
-                .map(user -> mapper.toTo(user))
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserTo findById(Long idType) {
         log.info("Запрос на получение пользователя с id {}.", idType);
-        return mapper.toTo(userRepository.findById(idType).orElseThrow(() ->
+        return mapper.toDto(userRepository.findById(idType).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден", idType))));
     }
 
@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService<Long> {
             }
         }
 
-        User user = mapper.toData(type);
+        User user = mapper.toEntity(type);
         user.setId(idType);
-        return mapper.toTo(userRepository.update(user));
+        return mapper.toDto(userRepository.update(user));
     }
 
     @Override
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService<Long> {
             throw new NotUniqueException(String.format("Пользователь с email: %s уже существует.", type.getEmail()));
         }
 
-        User user = mapper.toData(type);
+        User user = mapper.toEntity(type);
         user.setId(id++);
-        return mapper.toTo(userRepository.create(user));
+        return mapper.toDto(userRepository.create(user));
     }
 }

@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService<Long> {
         }
 
         return repository.findAllById(idOwner).stream()
-                .map(item -> mapper.toTo(item))
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -42,14 +42,14 @@ public class ItemServiceImpl implements ItemService<Long> {
             return new ArrayList<>();
         }
         return repository.findByText(text).stream()
-                .map(item -> mapper.toTo(item))
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ItemTo findById(Long idType) {
         log.info("Запрос на получение вещи по id {}.", idType);
-        return mapper.toTo(repository.findById(idType).orElseThrow(() ->
+        return mapper.toDto(repository.findById(idType).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь с id %d не найдена.", idType))));
     }
 
@@ -82,19 +82,19 @@ public class ItemServiceImpl implements ItemService<Long> {
 
         checkOwner(ownerId, itemId);
 
-        Item item = mapper.toData(type);
+        Item item = mapper.toEntity(type);
         item.setId(itemId);
-        return mapper.toTo(repository.update(item));
+        return mapper.toDto(repository.update(item));
     }
 
     @Override
     public ItemTo create(ItemTo type, Long ownerId) {
         log.info("Запрос на осздание вещи с id {}", ownerId);
-        Item item = mapper.toData(type);
+        Item item = mapper.toEntity(type);
         item.setOwner(userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден.", ownerId))));
         item.setId(id++);
-        return mapper.toTo(repository.create(item));
+        return mapper.toDto(repository.create(item));
     }
 
     private void checkOwner(Long ownerId, Long itemId) {

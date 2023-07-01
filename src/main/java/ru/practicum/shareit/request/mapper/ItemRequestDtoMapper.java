@@ -1,17 +1,17 @@
 package ru.practicum.shareit.request.mapper;
 
-import ru.practicum.shareit.common.dto.BaseTo;
+import ru.practicum.shareit.common.dto.BaseDto;
 import ru.practicum.shareit.request.dto.ItemRequestTo;
 import ru.practicum.shareit.request.entity.ItemRequest;
 
-public class ItemRequestDtoMapper implements BaseTo<ItemRequest, ItemRequestTo> {
+public class ItemRequestDtoMapper implements BaseDto<ItemRequest, ItemRequestTo> {
     @Override
-    public ItemRequestTo toTo(ItemRequest type) {
+    public ItemRequestTo toDto(ItemRequest type) {
         return null;
     }
 
     @Override
-    public ItemRequest toData(ItemRequestTo type) {
+    public ItemRequest toEntity(ItemRequestTo type) {
         return null;
     }
 }
