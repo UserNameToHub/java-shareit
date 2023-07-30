@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
+import ru.practicum.shareit.common.validationGroup.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,17 +14,18 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemTo {
     private Long id;
 
-    @NotBlank(message = "Данное поле не может быть пустым.")
+    @NotBlank(message = "Данное поле не может быть пустым.", groups = Create.class)
     private String name;
 
-    @NotBlank
-    @Length(min = 1, max = 200)
+    @NotBlank(message = "Данное поле не может быть пустым.", groups = Create.class)
     private String description;
 
-    @NotNull(message = "Данное поле не может быть пустым.")
+    @NotNull(message = "Данное поле не может быть пустым.", groups = Create.class)
     private Boolean available;
+
+    private ItemBookingGettingTo lastBooking;
+    private ItemBookingGettingTo nextBooking;
 }
