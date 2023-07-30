@@ -5,9 +5,6 @@ import ru.practicum.shareit.common.dto.BaseDtoMapper;
 import ru.practicum.shareit.item.dto.ItemTo;
 import ru.practicum.shareit.item.entity.Item;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class ItemDtoMapper implements BaseDtoMapper<Item, ItemTo> {
     @Override

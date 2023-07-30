@@ -13,6 +13,7 @@ public interface ItemRepository extends BaseRepository<Item, Long> {
             "where i.available is true and :search <> '' and (upper(i.name) like concat('%', upper(:search), '%') " +
             "or upper(i.description) like concat('%', upper(:search), '%'))")
     List<Item> findByNameOrDescriptionText(@Param("search") String search);
+
     @Query("select i from Item as i " +
             "join fetch i.owner as o " +
             "where o.id = :ownerId")
