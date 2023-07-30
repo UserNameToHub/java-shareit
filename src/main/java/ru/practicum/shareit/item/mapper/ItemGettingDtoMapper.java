@@ -27,7 +27,7 @@ public class ItemGettingDtoMapper implements BaseDtoMapper<Item, ItemGettingTo> 
         List<ItemBookingGettingTo> nextBooking = bookingRepository.findNextById(type.getId(), LocalDateTime.now(),
                 Pageable.ofSize(1));
 
-        if (lastBooking.isEmpty() || nextBooking.isEmpty()) {
+        if (lastBooking.isEmpty() && nextBooking.isEmpty()) {
             return toDto(type, false);
         }
 
@@ -36,8 +36,8 @@ public class ItemGettingDtoMapper implements BaseDtoMapper<Item, ItemGettingTo> 
                 .name(type.getName())
                 .description(type.getDescription())
                 .available(type.getAvailable())
-                .lastBooking(lastBooking.get(0))
-                .nextBooking(nextBooking.get(0))
+                .lastBooking(lastBooking.size() > 0 ? lastBooking.get(0): null)
+                .nextBooking(nextBooking.size() > 0 ? nextBooking.get(0): null)
                 .comments(mapper.toDtoList(commentRepository.findAllByItem_Id(type.getId())))
                 .build();
     }
