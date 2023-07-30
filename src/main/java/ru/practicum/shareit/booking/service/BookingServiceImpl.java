@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingCreatingTo;
 import ru.practicum.shareit.booking.dto.BookingGettingTo;
-import ru.practicum.shareit.booking.dto.BookingItemGettingTo;
 import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.enumeration.State;
 import ru.practicum.shareit.booking.enumeration.Status;

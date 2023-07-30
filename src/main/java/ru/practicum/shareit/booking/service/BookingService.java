@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface BookingService extends BaseService<BookingGettingTo, Long> {
     BookingGettingTo create(BookingCreatingTo booking);
+
     BookingGettingTo findById(Long bookingId, Long userId);
 
     BookingGettingTo updateStatus(Long bookingId, Boolean boolStatus, Long ownerId);
