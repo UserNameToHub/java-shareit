@@ -6,6 +6,8 @@ import ru.practicum.shareit.user.dto.UserTo;
 import java.util.List;
 
 public interface UserService<ID> extends BaseService<UserTo, ID> {
+    UserTo findById(Long idType);
+
     List<UserTo> findAll();
 
     void delete(ID idType);
