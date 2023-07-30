@@ -36,8 +36,8 @@ public class ItemGettingDtoMapper implements BaseDtoMapper<Item, ItemGettingTo> 
                 .name(type.getName())
                 .description(type.getDescription())
                 .available(type.getAvailable())
-                .lastBooking(lastBooking.size() > 0 ? lastBooking.get(0): null)
-                .nextBooking(nextBooking.size() > 0 ? nextBooking.get(0): null)
+                .lastBooking(lastBooking.size() > 0 ? lastBooking.get(0) : null)
+                .nextBooking(nextBooking.size() > 0 ? nextBooking.get(0) : null)
                 .comments(mapper.toDtoList(commentRepository.findAllByItem_Id(type.getId())))
                 .build();
     }
