@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreatingTo;
 import ru.practicum.shareit.booking.dto.BookingGettingTo;
 import ru.practicum.shareit.booking.enumeration.State;
+import ru.practicum.shareit.booking.enumeration.UserStatus;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
 import javax.validation.Valid;
@@ -46,12 +47,12 @@ public class BookingController {
     @GetMapping
     public List<BookingGettingTo> getAllByBooker(@RequestParam(name = "state", defaultValue = "ALL") State state,
                                                  @RequestHeader(HEADER_USER_ID) Long userid) {
-        return service.findAllByBooker(userid, state);
+        return service.findAll(userid, state, UserStatus.BOOKER);
     }
 
     @GetMapping("/owner")
     public List<BookingGettingTo> getAllByOwner(@RequestParam(name = "state", defaultValue = "ALL") State state,
                                                 @RequestHeader(HEADER_USER_ID) Long userid) {
-        return service.findAllByOwner(userid, state);
+        return service.findAll(userid, state, UserStatus.OWNER);
     }
 }

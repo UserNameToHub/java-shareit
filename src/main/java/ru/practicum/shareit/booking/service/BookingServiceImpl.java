@@ -75,22 +75,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingGettingTo> findAllByBooker(Long userId, State state) {
+    public List<BookingGettingTo> findAll(Long userId, State state, UserStatus userStatus) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", userId));
         }
-        return gettingDtoMapper.toDtoList(execute(userId, state, UserStatus.BOOKER));
-    }
-//    public List<BookingItemGettingTo> findAll(Long userIs, State state) {
-//    }
-
-
-    @Override
-    public List<BookingGettingTo> findAllByOwner(Long userId, State state) {
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.", userId));
-        }
-        return gettingDtoMapper.toDtoList(execute(userId, state, UserStatus.OWNER));
+        return gettingDtoMapper.toDtoList(execute(userId, state, userStatus));
     }
 
     @Override
