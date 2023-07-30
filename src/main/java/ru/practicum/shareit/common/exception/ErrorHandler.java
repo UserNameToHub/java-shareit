@@ -10,9 +10,9 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, DateException.class, UnavailableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> methodArgumentNotValidExceptionHandler(final MethodArgumentNotValidException e) {
+    public Map<String, String> methodArgumentNotValidExceptionHandler(final RuntimeException e) {
         return Map.of("errorMessage", e.getMessage());
     }
 
@@ -22,10 +22,11 @@ public class ErrorHandler {
         return Map.of("errorMessage", e.getMessage());
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> throwableExceptionHandler(final Throwable e) {
-        return Map.of("errorMessage", e.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> conversionFailedException(final IllegalArgumentException e) {
+        String[] words = e.getMessage().split("\\.");
+        return Map.of("error", "Unknown state: " + words[words.length - 1]);
     }
 
     @ExceptionHandler(NotUniqueException.class)
