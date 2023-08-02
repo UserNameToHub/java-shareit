@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @EqualsAndHashCode(of = "id")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserTo {
+public class UserDto {
     private Long id;
 
     @NotBlank(message = "Данное поле не может быть пустым.", groups = Create.class)

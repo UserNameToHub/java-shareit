@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ItemBookingGettingTo {
+public class ItemBookingGettingDto {
     private Long id;
     private Long bookerId;
 }

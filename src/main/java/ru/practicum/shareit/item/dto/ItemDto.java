@@ -1,19 +1,16 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import ru.practicum.shareit.common.validationGroup.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-/**
- * TODO Sprint add-controllers.
- */
+import java.util.List;
 
 @Data
 @Builder
-public class ItemTo {
+public class ItemDto {
     private Long id;
 
     @NotBlank(message = "Данное поле не может быть пустым.", groups = Create.class)
@@ -25,6 +22,9 @@ public class ItemTo {
     @NotNull(message = "Данное поле не может быть пустым.", groups = Create.class)
     private Boolean available;
 
-    private ItemBookingGettingTo lastBooking;
-    private ItemBookingGettingTo nextBooking;
+    private ItemBookingGettingDto lastBooking;
+    private ItemBookingGettingDto nextBooking;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<CommentDto> comments;
 }

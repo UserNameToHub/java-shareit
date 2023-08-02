@@ -17,8 +17,8 @@ import static ru.practicum.shareit.util.Constants.DATE_TIME_PATTERN;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BookingCreatingTo {
-    private Long userId;
+public class BookingCreatingDto {
+    private Long bookerId;
 
     @NotNull
     private Long itemId;
