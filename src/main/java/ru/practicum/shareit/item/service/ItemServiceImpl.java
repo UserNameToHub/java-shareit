@@ -72,7 +72,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     @Transactional
     public ItemDto update(ItemDto type, Long itemId, Long ownerId) {
         if (!userRepository.existsById(ownerId)) {
-            new NotFoundException(String.format("Пользователь с id %d не найден.)", ownerId));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.)", ownerId));
         }
 
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
