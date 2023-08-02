@@ -29,9 +29,9 @@ public class ErrorHandler {
         return Map.of("error", "Unknown state: " + words[words.length - 1]);
     }
 
-    @ExceptionHandler(NotUniqueException.class)
+    @ExceptionHandler({NotUniqueException.class, ReflectionException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> notUniqueExceptionHandler(final NotUniqueException e) {
+    public Map<String, String> notUniqueExceptionHandler(final RuntimeException e) {
         return Map.of("errorMessage", e.getMessage());
     }
 }

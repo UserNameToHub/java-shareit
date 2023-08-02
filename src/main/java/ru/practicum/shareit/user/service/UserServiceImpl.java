@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.common.exception.NotUniqueException;
-import ru.practicum.shareit.user.dto.UserTo;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.mapper.UserDtoMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService<Long> {
     private final UserDtoMapper mapper;
 
     @Override
-    public List<UserTo> findAll() {
+    public List<UserDto> findAll() {
         return repository.findAll().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService<Long> {
 
     @Override
     @Transactional
-    public UserTo update(UserTo type, Long idType) {
+    public UserDto update(UserDto type, Long idType) {
         User user = repository.findById(idType).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден.", idType)));
 
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService<Long> {
 
     @Override
     @Transactional
-    public UserTo create(UserTo type) {
+    public UserDto create(UserDto type) {
         try {
             return mapper.toDto(repository.save(mapper.toEntity(type)));
         } catch (DataIntegrityViolationException e) {
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService<Long> {
     }
 
     @Override
-    public UserTo findById(Long idType) {
+    public UserDto findById(Long idType) {
         return mapper.toDto(repository.findById(idType).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден.", idType))));
     }

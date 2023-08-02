@@ -25,33 +25,33 @@ public class ItemController {
     private final ItemServiceImpl service;
 
     @GetMapping
-    public List<ItemGettingTo> getAllById(@RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public List<ItemDto> getAllById(@RequestHeader(HEADER_USER_ID) Long ownerId) {
         return service.findAllById(ownerId);
     }
 
     @GetMapping("/{id}")
-    public ItemGettingTo getById(@PathVariable Long id,
-                                 @RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public ItemDto getById(@PathVariable Long id,
+                           @RequestHeader(HEADER_USER_ID) Long ownerId) {
         return service.findById(id, ownerId);
     }
 
     @GetMapping("/search")
-    public List<ItemTo> getByText(@NotBlank @RequestParam("text") String textRequest,
-                                  @RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public List<ItemDto> getByText(@NotBlank @RequestParam("text") String textRequest,
+                                   @RequestHeader(HEADER_USER_ID) Long ownerId) {
         return service.findByText(textRequest, ownerId);
     }
 
     @PostMapping
-    public ItemTo create(@Validated(Create.class) @RequestBody ItemTo itemTo,
-                         @RequestHeader(HEADER_USER_ID) Long ownerId) {
-        return service.create(itemTo, ownerId);
+    public ItemDto create(@Validated(Create.class) @RequestBody ItemDto itemDto,
+                          @RequestHeader(HEADER_USER_ID) Long ownerId) {
+        return service.create(itemDto, ownerId);
     }
 
     @PatchMapping("/{id}")
-    public ItemTo edit(@RequestBody ItemTo itemTo,
-                       @PathVariable Long id,
-                       @RequestHeader(HEADER_USER_ID) Long ownerId) {
-        return service.update(itemTo, id, ownerId);
+    public ItemDto edit(@RequestBody ItemDto itemDto,
+                        @PathVariable Long id,
+                        @RequestHeader(HEADER_USER_ID) Long ownerId) {
+        return service.update(itemDto, id, ownerId);
     }
 
     @DeleteMapping("/{id}")
@@ -62,9 +62,9 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentTo createComment(@Valid @RequestBody CommentTo comment,
-                                   @PathVariable("itemId") Long itemId,
-                                   @RequestHeader(HEADER_USER_ID) Long userId) {
+    public CommentDto createComment(@Valid @RequestBody CommentDto comment,
+                                    @PathVariable("itemId") Long itemId,
+                                    @RequestHeader(HEADER_USER_ID) Long userId) {
         return service.createComment(comment, itemId, userId);
     }
 }

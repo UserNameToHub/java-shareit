@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.dto.BookingCreatingTo;
-import ru.practicum.shareit.booking.dto.BookingGettingTo;
+import ru.practicum.shareit.booking.dto.BookingCreatingDto;
+import ru.practicum.shareit.booking.dto.BookingGettingDto;
 import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.enumeration.State;
 import ru.practicum.shareit.booking.enumeration.Status;
@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingGettingDtoMapper gettingDtoMapper;
 
     @Override
-    public BookingGettingTo findById(Long bookingId, Long userId) {
+    public BookingGettingDto findById(Long bookingId, Long userId) {
         log.info("Запрос на получение бронирование с id {} для пользователя с id {}");
         return gettingDtoMapper.toDto(bookingRepository.findByIdAndUserId(bookingId, userId)
                 .orElseThrow(() -> new NotFoundException(String.format(
@@ -48,10 +48,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingGettingTo create(BookingCreatingTo booking) {
+    public BookingGettingDto create(BookingCreatingDto booking) {
         log.info("Запрос на создание бронирования.");
-        User user = userRepository.findById(booking.getUserId()).orElseThrow(() ->
-                new NotFoundException(String.format("Пользователь с id %d не найден.", booking.getUserId())));
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователь с id %d не найден.", booking.getBookerId())));
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь с id %d не найдена.", booking.getItemId())));
 
@@ -74,7 +74,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingGettingTo> findAll(Long userId, State state, UserStatus userStatus) {
+    public List<BookingGettingDto> findAll(Long userId, State state, UserStatus userStatus) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", userId));
         }
@@ -83,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingGettingTo updateStatus(Long bookingId, Boolean boolStatus, Long ownerId) {
+    public BookingGettingDto updateStatus(Long bookingId, Boolean boolStatus, Long ownerId) {
         log.info("Запрос на обновление бронирования с id {} владельца с id {}", bookingId, ownerId);
         Booking updatingBooking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NotFoundException(String.format("Бронирование с id %d не найдено.", bookingId)));

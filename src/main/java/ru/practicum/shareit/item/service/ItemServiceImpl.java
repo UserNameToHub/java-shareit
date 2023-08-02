@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.common.exception.NotFoundException;
+import ru.practicum.shareit.common.exception.ReflectionException;
 import ru.practicum.shareit.common.exception.UnavailableException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.entity.Comment;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.item.mapper.CommentDtoMapper;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
-import ru.practicum.shareit.item.mapper.ItemGettingDtoMapper;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.entity.User;
@@ -30,12 +30,11 @@ public class ItemServiceImpl implements ItemService<Long> {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
-    private final ItemDtoMapper mapper;
     private final CommentDtoMapper commentDtoMapper;
-    private final ItemGettingDtoMapper gettingDtoMapper;
+    private final ItemDtoMapper gettingDtoMapper;
 
     @Override
-    public ItemGettingTo findById(Long idType, Long userId) {
+    public ItemDto findById(Long idType, Long userId) {
         Item item = itemRepository.findById(idType).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь с id %d не найдена.", idType)));
 
@@ -43,7 +42,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     }
 
     @Override
-    public List<ItemGettingTo> findAllById(Long idOwner) {
+    public List<ItemDto> findAllById(Long idOwner) {
         if (!userRepository.existsById(idOwner)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.)", idOwner));
         }
@@ -53,13 +52,13 @@ public class ItemServiceImpl implements ItemService<Long> {
     }
 
     @Override
-    public List<ItemTo> findByText(String text) {
-        return mapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
+    public List<ItemDto> findByText(String text) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
     }
 
     @Override
-    public List<ItemTo> findByText(String text, Long owner) {
-        return mapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
+    public List<ItemDto> findByText(String text, Long owner) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
     }
 
     @Override
@@ -71,12 +70,13 @@ public class ItemServiceImpl implements ItemService<Long> {
 
     @Override
     @Transactional
-    public ItemTo update(ItemTo type, Long itemId, Long ownerId) {
-        userRepository.findById(ownerId).orElseThrow(() ->
-                new NotFoundException(""));
+    public ItemDto update(ItemDto type, Long itemId, Long ownerId) {
+        if (!userRepository.existsById(ownerId)) {
+            new NotFoundException(String.format("Пользователь с id %d не найден.)", ownerId));
+        }
 
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
-                new NotFoundException(""));
+                new NotFoundException(String.format("Вещь с id %d не найдена.)", itemId)));
 
         if (!itemRepository.existsByIdAndOwnerId(itemId, ownerId)) {
             throw new NotFoundException(String.format(
@@ -86,27 +86,27 @@ public class ItemServiceImpl implements ItemService<Long> {
         try {
             updateField(type, item);
         } catch (ReflectiveOperationException e) {
-            // to do
+            throw new ReflectionException("Обновить данные не получилось.");
         }
 
-        return mapper.toDto(itemRepository.saveAndFlush(item));
+        return gettingDtoMapper.toDto(itemRepository.saveAndFlush(item));
     }
 
     @Override
     @Transactional
-    public ItemTo create(ItemTo type, Long ownerId) {
+    public ItemDto create(ItemDto type, Long ownerId) {
         User user = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException(String.format("Владелец с id %d не найден.", ownerId)));
-        Item item = mapper.toEntity(type);
+        Item item = gettingDtoMapper.toEntity(type);
 
         item.setOwner(user);
 
-        return mapper.toDto(itemRepository.save(item));
+        return gettingDtoMapper.toDto(itemRepository.save(item));
     }
 
     @Override
     @Transactional
-    public CommentTo createComment(CommentTo comment, Long itemId, Long userId) {
+    public CommentDto createComment(CommentDto comment, Long itemId, Long userId) {
         boolean isBooker = bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(itemId,
                 userId, LocalDateTime.now());
 

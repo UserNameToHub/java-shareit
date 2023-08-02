@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.common.validationGroup.Create;
 import ru.practicum.shareit.common.validationGroup.Update;
-import ru.practicum.shareit.user.dto.UserTo;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;
@@ -21,22 +21,22 @@ public class UserController {
     private final UserServiceImpl service;
 
     @GetMapping
-    public List<UserTo> getAll() {
+    public List<UserDto> getAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public UserTo getById(@PathVariable Long id) {
+    public UserDto getById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping
-    public UserTo create(@Validated(Create.class) @RequestBody UserTo user) {
+    public UserDto create(@Validated(Create.class) @RequestBody UserDto user) {
         return service.create(user);
     }
 
     @PatchMapping("/{id}")
-    public UserTo edit(@Validated(Update.class) @RequestBody UserTo user, @PathVariable Long id) {
+    public UserDto edit(@Validated(Update.class) @RequestBody UserDto user, @PathVariable Long id) {
         return service.update(user, id);
     }
 
