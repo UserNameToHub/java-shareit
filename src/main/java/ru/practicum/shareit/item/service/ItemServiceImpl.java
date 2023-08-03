@@ -1,106 +1,128 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.common.exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemTo;
+import ru.practicum.shareit.common.exception.ReflectionException;
+import ru.practicum.shareit.common.exception.UnavailableException;
+import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.entity.Comment;
 import ru.practicum.shareit.item.entity.Item;
+import ru.practicum.shareit.item.mapper.CommentDtoMapper;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
-import ru.practicum.shareit.item.repository.ItemRepositoryImpl;
-import ru.practicum.shareit.user.repository.UserRepositoryImpl;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.entity.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.util.Constants.ORDER_BY_ID_ASC;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService<Long> {
-    private final ItemRepositoryImpl repository;
-    private final UserRepositoryImpl userRepository;
-    private final ItemDtoMapper mapper;
-    private Long id = 1L;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
+    private final CommentDtoMapper commentDtoMapper;
+    private final ItemDtoMapper gettingDtoMapper;
 
     @Override
-    public List<ItemTo> findAllById(Long idOwner) {
-        log.info("Запрос на получение всех вещей для пользователя с id {}", idOwner);
+    public ItemDto findById(Long idType, Long userId) {
+        Item item = itemRepository.findById(idType).orElseThrow(() ->
+                new NotFoundException(String.format("Вещь с id %d не найдена.", idType)));
+
+        return gettingDtoMapper.toDto(item, itemRepository.existsByIdAndOwnerId(idType, userId));
+    }
+
+    @Override
+    public List<ItemDto> findAllById(Long idOwner) {
         if (!userRepository.existsById(idOwner)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.", idOwner));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.)", idOwner));
         }
 
-        return repository.findAllById(idOwner).stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        List<Item> allByOwnerId = itemRepository.findAllByOwnerId(idOwner, ORDER_BY_ID_ASC);
+        return gettingDtoMapper.toDtoList(allByOwnerId);
     }
 
     @Override
-    public List<ItemTo> findByText(String text) {
-        log.info("Запрос на получение вещей, содержащих текст \" {} \" в названии или описании.", text);
-        if (text.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return repository.findByText(text).stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+    public List<ItemDto> findByText(String text) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
     }
 
     @Override
-    public ItemTo findById(Long idType) {
-        log.info("Запрос на получение вещи по id {}.", idType);
-        return mapper.toDto(repository.findById(idType).orElseThrow(() ->
-                new NotFoundException(String.format("Вещь с id %d не найдена.", idType))));
+    public List<ItemDto> findByText(String text, Long owner) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
     }
 
     @Override
+    @Transactional
     public void delete(Long idType, Long idOwner) {
-        log.info("Запрос на удаление вещи с id {}, владелец которой имеет id {}.", idType, idOwner);
-        if (userRepository.existsById(idOwner)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.", idOwner));
-        }
-
-        if (repository.existsById(idType)) {
-            throw new NotFoundException(String.format("Вещь с id %d не найдена.", idType));
-        }
-
-        checkOwner(idOwner, idType);
-
-        repository.delete(idType);
+        boolean b = itemRepository.existsByIdAndOwnerId(idType, idOwner);
+        itemRepository.deleteByOwnerId(idType, idOwner);
     }
 
     @Override
-    public ItemTo update(ItemTo type, Long itemId, Long ownerId) {
-        log.info("Запрос на обновление вещи с id {}, владелец которой имеет id {}.", itemId, ownerId);
+    @Transactional
+    public ItemDto update(ItemDto type, Long itemId, Long ownerId) {
         if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.", ownerId));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.)", ownerId));
         }
 
-        if (!repository.existsById(itemId)) {
-            throw new NotFoundException(String.format("Вещь с id %d не найдена.", itemId));
+        Item item = itemRepository.findById(itemId).orElseThrow(() ->
+                new NotFoundException(String.format("Вещь с id %d не найдена.)", itemId)));
+
+        if (!itemRepository.existsByIdAndOwnerId(itemId, ownerId)) {
+            throw new NotFoundException(String.format(
+                    "Пользователь с id %d не владеет вещью с id %d.", ownerId, itemId));
         }
 
-        checkOwner(ownerId, itemId);
+        try {
+            updateField(type, item);
+        } catch (ReflectiveOperationException e) {
+            throw new ReflectionException("Обновить данные не получилось.");
+        }
 
-        Item item = mapper.toEntity(type);
-        item.setId(itemId);
-        return mapper.toDto(repository.update(item));
+        return gettingDtoMapper.toDto(itemRepository.saveAndFlush(item));
     }
 
     @Override
-    public ItemTo create(ItemTo type, Long ownerId) {
-        log.info("Запрос на осздание вещи с id {}", ownerId);
-        Item item = mapper.toEntity(type);
-        item.setOwner(userRepository.findById(ownerId).orElseThrow(() ->
-                new NotFoundException(String.format("Пользователь с id %d не найден.", ownerId))));
-        item.setId(id++);
-        return mapper.toDto(repository.create(item));
+    @Transactional
+    public ItemDto create(ItemDto type, Long ownerId) {
+        User user = userRepository.findById(ownerId).orElseThrow(() ->
+                new NotFoundException(String.format("Владелец с id %d не найден.", ownerId)));
+        Item item = gettingDtoMapper.toEntity(type);
+
+        item.setOwner(user);
+
+        return gettingDtoMapper.toDto(itemRepository.save(item));
     }
 
-    private void checkOwner(Long ownerId, Long itemId) {
-        if (repository.findById(itemId).get().getOwner().getId().compareTo(ownerId) != 0) {
-            throw new NotFoundException(String.format("Пользователь с id %d не является владельцем вещи с id %d.",
-                    ownerId, itemId));
+    @Override
+    @Transactional
+    public CommentDto createComment(CommentDto comment, Long itemId, Long userId) {
+        boolean isBooker = bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(itemId,
+                userId, LocalDateTime.now());
+
+        if (!isBooker) {
+            throw new UnavailableException(String.format("Пользователь с id %d не может оставить отзыв вещи с id %d.",
+                    userId, itemId));
         }
+
+        Item item = itemRepository.findById(itemId).orElseThrow(() ->
+                new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
+        LocalDateTime now = LocalDateTime.now();
+
+        Comment newComment = commentDtoMapper.toEntity(comment, item, user, now);
+
+        return commentDtoMapper.toDto(commentRepository.save(newComment));
     }
 }
