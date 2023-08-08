@@ -2,6 +2,9 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingCreatingDto;
@@ -74,11 +77,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingGettingDto> findAll(Long userId, State state, UserStatus userStatus) {
+    public List<BookingGettingDto> findAll(Long userId, State state, UserStatus userStatus, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", userId));
         }
-        return gettingDtoMapper.toDtoList(execute(userId, state, userStatus));
+        return gettingDtoMapper.toDtoList(execute(userId, state, userStatus, List.of(from, size)));
     }
 
     @Override
@@ -102,35 +105,41 @@ public class BookingServiceImpl implements BookingService {
         return gettingDtoMapper.toDto(bookingRepository.save(updatingBooking));
     }
 
-    private List<Booking> execute(Long id, State state, UserStatus userStatus) {
+    private List<Booking> execute(Long id, State state, UserStatus userStatus, List<Integer> pageParam) {
         LocalDateTime now = LocalDateTime.now();
 
         if (userStatus.equals(UserStatus.BOOKER)) {
             switch (state) {
                 case PAST:
-                    return bookingRepository.findAllByBookerIdAndEndDateIsBefore(id, now, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByBookerIdAndEndDateIsBefore(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case FUTURE:
-                    return bookingRepository.findAllByBookerIdAndStartDateIsAfter(id, now, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByBookerIdAndStartDateIsAfter(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case ALL:
-                    return bookingRepository.findAllByBookerId(id, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByBooker_Id(id, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case CURRENT:
-                    return bookingRepository.findAllCurrentByBookerId(id, now, ORDER_BY_ID_ASC);
+                    return bookingRepository.findAllCurrentByBookerId(id, now, getPage(pageParam, ORDER_BY_ID_ASC)).toList();
                 default:
-                    return bookingRepository.findAllByBookerIdAndStatusIs(id, Status.valueOf(state.toString()), ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByBookerIdAndStatusIs(id, Status.valueOf(state.toString()),
+                            getPage(pageParam, ORDER_BY_ID_ASC)).toList();
             }
         } else {
             switch (state) {
                 case PAST:
-                    return bookingRepository.findAllByItemOwnerIdAndEndDateIsBefore(id, now, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByItemOwnerIdAndEndDateIsBefore(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case FUTURE:
-                    return bookingRepository.findAllByItemOwnerIdAndStartDateIsAfter(id, now, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByItemOwnerIdAndStartDateIsAfter(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case ALL:
-                    return bookingRepository.findAllByItemOwnerId(id, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByItemOwnerId(id, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 case CURRENT:
-                    return bookingRepository.findAllCurrentByItemOwnerId(id, now, ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllCurrentByItemOwnerId(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
                 default:
-                    return bookingRepository.findAllByItemOwnerIdAndStatusIs(id, Status.valueOf(state.toString()), ORDER_BY_DATE_DESC);
+                    return bookingRepository.findAllByItemOwnerIdAndStatusIs(id, Status.valueOf(state.toString()),
+                            getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
             }
         }
+    }
+
+    private Pageable getPage(List<Integer> pageParam, Sort sort) {
+        return PageRequest.of(pageParam.get(0), pageParam.get(1), sort);
     }
 }

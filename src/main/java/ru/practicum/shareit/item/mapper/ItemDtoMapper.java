@@ -9,9 +9,12 @@ import ru.practicum.shareit.item.dto.ItemBookingGettingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.request.entity.ItemRequest;
+import ru.practicum.shareit.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.practicum.shareit.util.Constants.ORDER_BY_DATE_ASC;
 import static ru.practicum.shareit.util.Constants.ORDER_BY_DATE_DESC;
@@ -42,6 +45,7 @@ public class ItemDtoMapper implements BaseDtoMapper<Item, ItemDto> {
                 .lastBooking(lastBooking.size() > 0 ? lastBooking.get(0) : null)
                 .nextBooking(nextBooking.size() > 0 ? nextBooking.get(0) : null)
                 .comments(mapper.toDtoList(commentRepository.findAllByItem_Id(type.getId())))
+                .requestId(Objects.nonNull(type.getRequest()) ? type.getRequest().getId() : null)
                 .build();
     }
 
@@ -53,18 +57,21 @@ public class ItemDtoMapper implements BaseDtoMapper<Item, ItemDto> {
                     .description(type.getDescription())
                     .available(type.getAvailable())
                     .comments(mapper.toDtoList(commentRepository.findAllByItem_Id(type.getId())))
+                    .requestId(Objects.nonNull(type.getRequest()) ? type.getRequest().getId() : null)
                     .build();
         }
 
         return toDto(type);
     }
 
-    public Item toEntity(ItemDto type) {
+    public Item toEntity(ItemDto type, ItemRequest request, User owner) {
         return Item.builder()
                 .id(type.getId())
                 .name(type.getName())
                 .description(type.getDescription())
                 .available(type.getAvailable())
+                .request(request)
+                .owner(owner)
                 .build();
     }
 }

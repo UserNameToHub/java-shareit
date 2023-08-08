@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -14,11 +15,14 @@ import ru.practicum.shareit.item.mapper.CommentDtoMapper;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.RequestRepository;
+import ru.practicum.shareit.request.entity.ItemRequest;
 import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.practicum.shareit.util.Constants.ORDER_BY_ID_ASC;
 
@@ -33,6 +37,8 @@ public class ItemServiceImpl implements ItemService<Long> {
     private final CommentDtoMapper commentDtoMapper;
     private final ItemDtoMapper gettingDtoMapper;
 
+    private final RequestRepository requestRepository;
+
     @Override
     public ItemDto findById(Long idType, Long userId) {
         Item item = itemRepository.findById(idType).orElseThrow(() ->
@@ -42,23 +48,27 @@ public class ItemServiceImpl implements ItemService<Long> {
     }
 
     @Override
-    public List<ItemDto> findAllById(Long idOwner) {
+    public List<ItemDto> findAllById(Long idOwner, List<Integer> pageParam) {
         if (!userRepository.existsById(idOwner)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.)", idOwner));
         }
 
-        List<Item> allByOwnerId = itemRepository.findAllByOwnerId(idOwner, ORDER_BY_ID_ASC);
-        return gettingDtoMapper.toDtoList(allByOwnerId);
+//        List<Item> allByOwnerId = itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
+//                pageParam.get(1), ORDER_BY_ID_ASC)).toList();
+        return gettingDtoMapper.toDtoList(itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
+                pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 
     @Override
-    public List<ItemDto> findByText(String text) {
-        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
+    public List<ItemDto> findByText(String text, List<Integer> pageParam) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(pageParam.get(0),
+                pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 
     @Override
-    public List<ItemDto> findByText(String text, Long owner) {
-        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text));
+    public List<ItemDto> findByText(String text, Long owner, List<Integer> pageParam) {
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(pageParam.get(0),
+                pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 
     @Override
@@ -97,9 +107,11 @@ public class ItemServiceImpl implements ItemService<Long> {
     public ItemDto create(ItemDto type, Long ownerId) {
         User user = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException(String.format("Владелец с id %d не найден.", ownerId)));
-        Item item = gettingDtoMapper.toEntity(type);
 
-        item.setOwner(user);
+        ItemRequest request = Objects.nonNull(type.getRequestId()) ? requestRepository.findById(type.getRequestId()).
+                orElseThrow(() -> new NotFoundException("")) : null;
+
+        Item item = gettingDtoMapper.toEntity(type, request, user);
 
         return gettingDtoMapper.toDto(itemRepository.save(item));
     }
