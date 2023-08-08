@@ -108,8 +108,8 @@ public class ItemServiceImpl implements ItemService<Long> {
         User user = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException(String.format("Владелец с id %d не найден.", ownerId)));
 
-        ItemRequest request = Objects.nonNull(type.getRequestId()) ? requestRepository.findById(type.getRequestId()).
-                orElseThrow(() -> new NotFoundException("")) : null;
+        ItemRequest request = Objects.nonNull(type.getRequestId()) ? requestRepository.findById(type.getRequestId())
+                        .orElseThrow(() -> new NotFoundException("")) : null;
 
         Item item = gettingDtoMapper.toEntity(type, request, user);
 

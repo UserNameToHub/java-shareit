@@ -5,11 +5,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.entity.User;
-import ru.practicum.shareit.user.mapper.UserDtoMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,7 +39,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDto> findIllById(Long id) {
         if (!userRepository.existsById(id)) {
-            throw  new NotFoundException(String.format("Пользователь с id %d не найден.", id));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.", id));
         }
         return requestDtoMapper.toDtoList(requestRepository.findAllByRequester_Id(id));
     }

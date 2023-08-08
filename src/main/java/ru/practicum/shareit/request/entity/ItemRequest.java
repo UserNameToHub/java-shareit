@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.entity;
 
 import lombok.*;
-import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.user.entity.User;
 
 import javax.persistence.*;
