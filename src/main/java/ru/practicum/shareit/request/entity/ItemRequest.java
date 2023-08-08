@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import ru.practicum.shareit.item.entity.Item;
 import ru.practicum.shareit.user.entity.User;
 
 import javax.persistence.*;
@@ -13,7 +13,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @EqualsAndHashCode(of = "id")
+@Table(name = "requests")
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +25,7 @@ public class ItemRequest {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User requestor;
+    private User requester;
 
     @Column
     private String description;
