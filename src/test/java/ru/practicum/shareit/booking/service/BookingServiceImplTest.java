@@ -203,6 +203,13 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void testFindAllWhenUserIsNotFound() {
+        NotFoundException nfeItem = assertThrows(NotFoundException.class, () ->
+                service.findAll(99L, State.ALL, UserStatus.BOOKER, 0, 1));
+        assertEquals("Пользователь с id 99 не найден.", nfeItem.getMessage());
+    }
+
+    @Test
     void testUpdateStatus() {
         service.create(creatingDto);
         BookingGettingDto bookingGettingDto = service.updateStatus(1L, true, 2L);
