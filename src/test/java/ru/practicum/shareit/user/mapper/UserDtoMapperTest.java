@@ -4,11 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.entity.User;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,9 +19,6 @@ class UserDtoMapperTest {
     private static UserDto userDto;
 
     private static User user;
-
-    @Autowired
-    private UserServiceImpl service;
 
     @BeforeAll
     public static void init() {

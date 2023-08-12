@@ -194,6 +194,12 @@ class BookingServiceImplTest {
 
         List<BookingGettingDto> bookingsOwnerCurrent = service.findAll(1L, State.CURRENT, UserStatus.OWNER, 0, 10);
         assertThat(bookingsOwnerCurrent.size(), equalTo(0));
+
+        List<BookingGettingDto> bookingsOwnerWaiting = service.findAll(1L, State.REJECTED, UserStatus.OWNER, 0, 10);
+        assertThat(bookingsOwnerWaiting.size(), equalTo(0));
+
+        List<BookingGettingDto> bookingWaiting = service.findAll(1L, State.REJECTED, UserStatus.BOOKER, 0, 10);
+        assertThat(bookingWaiting.size(), equalTo(0));
     }
 
     @Test

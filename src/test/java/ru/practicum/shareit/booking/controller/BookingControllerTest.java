@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ class BookingControllerTest {
     private BookingService bookingService;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mvc;
 
     private BookingCreatingDto creatingDto;
@@ -57,6 +61,22 @@ class BookingControllerTest {
                 .item(ItemDto.builder().build())
                 .status(Status.WAITING)
                 .build();
+    }
+
+    @Test
+    void testCreate() throws Exception {
+        when(bookingService.create(any()))
+                .thenReturn(gettingDto);
+
+
+        mvc.perform(post(REST_URL)
+                        .header(HEADER_USER_ID, 1)
+                        .content(objectMapper.writeValueAsString(creatingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
