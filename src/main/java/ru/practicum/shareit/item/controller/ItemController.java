@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.common.validationGroup.Create;
 import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemServiceImpl service;
+    private final ItemService service;
 
     @GetMapping
     public List<ItemDto> getAllById(@RequestHeader(HEADER_USER_ID) Long ownerId,

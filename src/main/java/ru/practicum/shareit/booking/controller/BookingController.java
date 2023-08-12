@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingCreatingDto;
 import ru.practicum.shareit.booking.dto.BookingGettingDto;
 import ru.practicum.shareit.booking.enumeration.State;
 import ru.practicum.shareit.booking.enumeration.UserStatus;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-    private final BookingServiceImpl service;
+    private final BookingService service;
 
     @PostMapping
     public BookingGettingDto create(@Valid @RequestBody BookingCreatingDto booking,
