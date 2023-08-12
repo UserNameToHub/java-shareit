@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
-    private final static String REST_URL = "/users";
+    private static final String REST_URL = "/users";
 
     @Autowired
     private ObjectMapper objectMapper;

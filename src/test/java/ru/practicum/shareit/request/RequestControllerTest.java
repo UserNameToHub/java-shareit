@@ -27,7 +27,7 @@ import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 
 @WebMvcTest(controllers = RequestController.class)
 class RequestControllerTest {
-    private final static String REST_URL = "/requests";
+    private static final String REST_URL = "/requests";
 
     @Autowired
     private ObjectMapper objectMapper;

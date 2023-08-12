@@ -28,7 +28,7 @@ import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
-    private final static String REST_URL = "/bookings";
+    private static final String REST_URL = "/bookings";
 
     @MockBean
     private BookingService bookingService;
