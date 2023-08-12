@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     @Override
     public List<ItemDto> findAllById(Long idOwner, List<Integer> pageParam) {
         if (!userRepository.existsById(idOwner)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.)", idOwner));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.", idOwner));
         }
 
 //        List<Item> allByOwnerId = itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
@@ -82,11 +82,11 @@ public class ItemServiceImpl implements ItemService<Long> {
     @Transactional
     public ItemDto update(ItemDto type, Long itemId, Long ownerId) {
         if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException(String.format("Пользователь с id %d не найден.)", ownerId));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден.", ownerId));
         }
 
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
-                new NotFoundException(String.format("Вещь с id %d не найдена.)", itemId)));
+                new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
 
         if (!itemRepository.existsByIdAndOwnerId(itemId, ownerId)) {
             throw new NotFoundException(String.format(
@@ -130,7 +130,7 @@ public class ItemServiceImpl implements ItemService<Long> {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
+                new NotFoundException(String.format("Пользователь с id %d не найден.", itemId)));
         LocalDateTime now = LocalDateTime.now();
 
         Comment newComment = commentDtoMapper.toEntity(comment, item, user, now);

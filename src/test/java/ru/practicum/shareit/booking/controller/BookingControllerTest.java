@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 class BookingControllerTest {
     private final static String REST_URL = "/bookings";
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private BookingService bookingService;
 
@@ -42,9 +38,7 @@ class BookingControllerTest {
 
     private BookingCreatingDto creatingDto;
     private BookingGettingDto gettingDto;
-
     private LocalDateTime from;
-
     private LocalDateTime to;
 
     @BeforeEach
@@ -64,21 +58,6 @@ class BookingControllerTest {
                 .status(Status.WAITING)
                 .build();
     }
-
-//    @Test
-//    void testCreate() throws Exception {
-//        when(bookingService.create(any()))
-//                .thenReturn(gettingDto);
-//
-//        mvc.perform(post(REST_URL)
-//                        .header(HEADER_USER_ID, 1)
-//                        .content(objectMapper.writeValueAsString(creatingDto))
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     void testGetById() throws Exception {

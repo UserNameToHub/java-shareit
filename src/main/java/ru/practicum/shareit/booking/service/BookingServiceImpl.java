@@ -92,11 +92,11 @@ public class BookingServiceImpl implements BookingService {
                 new NotFoundException(String.format("Бронирование с id %d не найдено.", bookingId)));
 
         if (!updatingBooking.getItem().getOwner().getId().equals(ownerId)) {
-            throw new NotFoundException("Владелец с %id не найден.");
+            throw new NotFoundException(String.format("Владелец с id %d не найден.", ownerId));
         }
 
         if (updatingBooking.getStatus().equals(Status.APPROVED)) {
-            throw new UnavailableException("Бронирование с id уже подтверждено владельцем.");
+            throw new UnavailableException(String.format("Бронирование с id %d уже подтверждено владельцем.", bookingId));
         }
 
         Status newStatus = boolStatus ? Status.APPROVED : Status.REJECTED;

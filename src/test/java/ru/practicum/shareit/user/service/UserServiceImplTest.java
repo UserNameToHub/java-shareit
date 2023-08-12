@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
@@ -11,7 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.entity.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -34,9 +32,6 @@ class UserServiceImplTest {
 
     @Autowired
     private UserService service;
-
-    @Mock
-    private UserRepository userRepository;
 
     private static UserDto userDto;
 
