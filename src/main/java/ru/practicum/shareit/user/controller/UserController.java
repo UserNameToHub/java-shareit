@@ -7,7 +7,6 @@ import ru.practicum.shareit.common.validationGroup.Create;
 import ru.practicum.shareit.common.validationGroup.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;
 
