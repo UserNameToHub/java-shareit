@@ -82,7 +82,7 @@ class UserControllerTest {
 
     @Test
     public void shouldGetStatusOkWhenPathVariableIsCorrect() throws Exception {
-        when(userService.findById(1l))
+        when(userService.findById(1L))
                 .thenReturn(userDto);
 
         mvc.perform(get(REST_URL + "/{id}", 1)
@@ -95,7 +95,7 @@ class UserControllerTest {
 
     @Test
     public void shouldGetStatus404WhenPathVariableIsNotCorrect() throws Exception {
-        when(userService.findById(2l))
+        when(userService.findById(2L))
                 .thenThrow(new NotFoundException(String.format("Пользователь с id %d уже существует.", userDto.getId())));
 
         mvc.perform(get(REST_URL + "/{id}", 2)

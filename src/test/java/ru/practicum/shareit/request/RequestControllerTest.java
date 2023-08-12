@@ -87,7 +87,7 @@ class RequestControllerTest {
 
     @Test
     public void shouldGetStatusOkWhenPathVariableIsCorrect() throws Exception {
-        when(requestService.findIllById(1l))
+        when(requestService.findIllById(1L))
                 .thenReturn(List.of(requestDto));
 
         mvc.perform(get(REST_URL)

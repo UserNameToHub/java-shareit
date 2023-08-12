@@ -128,7 +128,7 @@ class ItemServiceImplTest {
         assertEquals("Вещь с id 99 не найдена.", nfeUser.getMessage());
 
         NotFoundException nfeOwner = assertThrows(NotFoundException.class, () ->
-                service.update(updatingField, 1L, 2l));
+                service.update(updatingField, 1L, 2L));
 
         assertEquals("Пользователь с id 2 не владеет вещью с id 1.", nfeOwner.getMessage());
     }
