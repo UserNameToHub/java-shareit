@@ -22,7 +22,7 @@ class RequestDtoTest {
 
     @Test
     void testUserDto() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withNano(0);
         List<ItemDto> emptyItems = List.of(ItemDto.builder().build());
         UserDto emptyUser = UserDto.builder().id(1L).build();
         RequestDto requestDto = RequestDto.builder()
@@ -37,7 +37,6 @@ class RequestDtoTest {
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Description");
-        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(now.format(DateTimeFormatter
-                .ofPattern(DATE_TIME_PATTERN)));
+        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(now.toString());
     }
 }
