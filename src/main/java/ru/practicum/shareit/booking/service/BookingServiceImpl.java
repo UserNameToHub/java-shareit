@@ -27,8 +27,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.shareit.util.Constants.ORDER_BY_DATE_DESC;
-import static ru.practicum.shareit.util.Constants.ORDER_BY_ID_ASC;
+import static ru.practicum.shareit.util.Constants.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -43,7 +42,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingGettingDto findById(Long bookingId, Long userId) {
-//        log.info("Запрос на получение бронирование с id {} для пользователя с id {}");
         return gettingDtoMapper.toDto(bookingRepository.findByIdAndUserId(bookingId, userId)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         "Бронирование с id %s не найдено или пользователь с id %s не найден.", bookingId, userId))));
@@ -52,7 +50,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingGettingDto create(BookingCreatingDto booking) {
-//        log.info("Запрос на создание бронирования.");
         User user = userRepository.findById(booking.getBookerId()).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден.", booking.getBookerId())));
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() ->
@@ -87,7 +84,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingGettingDto updateStatus(Long bookingId, Boolean boolStatus, Long ownerId) {
-//        log.info("Запрос на обновление бронирования с id {} владельца с id {}", bookingId, ownerId);
         Booking updatingBooking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NotFoundException(String.format("Бронирование с id %d не найдено.", bookingId)));
 
@@ -140,6 +136,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Pageable getPage(List<Integer> pageParam, Sort sort) {
-        return PageRequest.of(pageParam.get(0), pageParam.get(1), sort);
+        return PageRequest.of((int) Math.ceil((pageParam.get(0) / pageParam.get(1))), pageParam.get(1), sort);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.web.PageableDefault;
 import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.enumeration.Status;
 import ru.practicum.shareit.common.repository.BaseRepository;
@@ -25,14 +26,12 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
     Page<Booking> findAllByBookerIdAndEndDateIsBefore(Long id, LocalDateTime dateTime, Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-//            "join fetch bk.booker as bkr " +
             "where bk.booker.id = :id and bk.startDate > :dateTime")
     Page<Booking> findAllByBookerIdAndStartDateIsAfter(@Param("id") Long id,
                                                        @Param("dateTime") LocalDateTime dateTime,
                                                        @Param("page") Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-//            "join fetch bk.booker as bkr " +
             "where bk.booker.id = :id and :dateTime between bk.startDate and bk.endDate")
     Page<Booking> findAllCurrentByBookerId(@Param("id") Long id,
                                            @Param("dateTime") LocalDateTime dateTime,
@@ -47,8 +46,6 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
     Page<Booking> findAllByItemOwnerIdAndStartDateIsAfter(Long id, LocalDateTime dateTime, Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-//            "join fetch bk.item as i " +
-//            "join fetch i.owner as o " +
             "where bk.item.owner.id = :id and :dateTime between bk.startDate and bk.endDate")
     Page<Booking> findAllCurrentByItemOwnerId(@Param("id") Long id,
                                               @Param("dateTime") LocalDateTime dateTime,
