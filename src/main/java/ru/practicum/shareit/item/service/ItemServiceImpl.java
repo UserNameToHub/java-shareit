@@ -53,19 +53,22 @@ public class ItemServiceImpl implements ItemService<Long> {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", idOwner));
         }
 
-        return gettingDtoMapper.toDtoList(itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
+        return gettingDtoMapper.toDtoList(itemRepository.findAllByOwnerId(idOwner, PageRequest.of(
+                (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0)),
                 pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 
     @Override
     public List<ItemDto> findByText(String text, List<Integer> pageParam) {
-        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(pageParam.get(0),
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(
+                (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0)),
                 pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 
     @Override
     public List<ItemDto> findByText(String text, Long owner, List<Integer> pageParam) {
-        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(pageParam.get(0),
+        return gettingDtoMapper.toDtoList(itemRepository.findByNameOrDescriptionText(text, PageRequest.of(
+                (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0)),
                 pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
 

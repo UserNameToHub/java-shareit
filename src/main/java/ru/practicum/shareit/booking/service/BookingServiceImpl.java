@@ -78,6 +78,11 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", userId));
         }
+
+        if (from < 0 ||  size <= 0) {
+            throw new IllegalArgumentException("Значиения араметров запроса не должны быть меньше нуля.");
+        }
+
         return gettingDtoMapper.toDtoList(execute(userId, state, userStatus, List.of(from, size)));
     }
 
@@ -136,7 +141,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Pageable getPage(List<Integer> pageParam, Sort sort) {
-        int ceil = (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0));
-        return PageRequest.of(ceil, pageParam.get(1), sort);
+        int page = pageParam.get(0) == 0 ? 0 : (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0));
+        return PageRequest.of(page, pageParam.get(1), sort);
     }
 }

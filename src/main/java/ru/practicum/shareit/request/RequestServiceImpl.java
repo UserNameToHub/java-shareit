@@ -33,7 +33,8 @@ public class RequestServiceImpl implements RequestService {
     public RequestDto create(RequestDto type, Long userId) {
         User requester = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь с id %d не найден.", userId)));
-        return requestDtoMapper.toDto(requestRepository.save(requestDtoMapper.toEntity(type, requester, LocalDateTime.now())));
+        return requestDtoMapper.toDto(requestRepository.save(requestDtoMapper.toEntity(type, requester,
+                LocalDateTime.now().plusMinutes(2))));
     }
 
     @Override
