@@ -136,6 +136,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Pageable getPage(List<Integer> pageParam, Sort sort) {
-        return PageRequest.of((int) Math.ceil((pageParam.get(0) / pageParam.get(1))), pageParam.get(1), sort);
+        int ceil = (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0));
+        return PageRequest.of(ceil, pageParam.get(1), sort);
     }
 }
