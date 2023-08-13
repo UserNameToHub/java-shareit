@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -9,8 +8,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static ru.practicum.shareit.util.Constants.DATE_TIME_PATTERN;
 
 /**
  * TODO Sprint add-item-requests.
