@@ -93,8 +93,7 @@ public class ItemServiceImpl implements ItemService<Long> {
         try {
             updateField(type, item);
         } catch (ReflectiveOperationException e) {
-//            throw new ReflectionException("Обновить данные не получилось.");
-            e.getMessage();
+            throw new ReflectionException("Обновить данные не получилось.");
         }
         return gettingDtoMapper.toDto(itemRepository.saveAndFlush(item));
     }
