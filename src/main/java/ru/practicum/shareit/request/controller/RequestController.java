@@ -1,7 +1,8 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.request.dto.RequestDto;
 
 import javax.validation.Valid;

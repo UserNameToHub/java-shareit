@@ -1,10 +1,13 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.mapper.RequestDtoMapper;
+import ru.practicum.shareit.request.repository.RequestRepository;
+import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 

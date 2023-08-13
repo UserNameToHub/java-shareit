@@ -15,7 +15,7 @@ import ru.practicum.shareit.item.mapper.CommentDtoMapper;
 import ru.practicum.shareit.item.mapper.ItemDtoMapper;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.RequestRepository;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.entity.ItemRequest;
 import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.repository.UserRepository;

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.practicum.shareit.common.exception.NotFoundException;
+import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
