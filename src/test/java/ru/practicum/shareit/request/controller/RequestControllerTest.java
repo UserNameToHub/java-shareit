@@ -83,7 +83,6 @@ class RequestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print());
-//                .andExpect(status().isNotFound());
     }
 
     @Test

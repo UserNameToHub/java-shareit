@@ -26,7 +26,6 @@ public class RequestDto {
     @NotBlank
     private String description;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 
     private List<ItemDto> items;
