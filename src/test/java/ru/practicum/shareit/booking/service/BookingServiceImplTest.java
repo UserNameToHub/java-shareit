@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,6 +32,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @Transactional
 @SpringBootTest(
@@ -240,5 +243,18 @@ class BookingServiceImplTest {
         UnavailableException ue = assertThrows(UnavailableException.class, () ->
                 service.updateStatus(1L, true, 2L));
         assertEquals("Бронирование с id 1 уже подтверждено владельцем.", ue.getMessage());
+    }
+
+    @Test
+    void testFindAllWhenParamIsNotValid() {
+        UserRepository mockUser = Mockito.mock(UserRepository.class);
+        when(mockUser.existsById(any()))
+                .thenReturn(true);
+
+        IllegalArgumentException iax = assertThrows(IllegalArgumentException.class, () ->
+                service.findAll(1L, State.ALL, UserStatus.BOOKER, -1, 10));
+
+        assertThat("Значиения араметров запроса не должны быть меньше нуля.", equalTo(iax.getMessage()));
+
     }
 }

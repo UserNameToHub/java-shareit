@@ -82,7 +82,6 @@ public class BookingServiceImpl implements BookingService {
         if (from < 0 ||  size <= 0) {
             throw new IllegalArgumentException("Значиения араметров запроса не должны быть меньше нуля.");
         }
-
         return gettingDtoMapper.toDtoList(execute(userId, state, userStatus, List.of(from, size)));
     }
 
