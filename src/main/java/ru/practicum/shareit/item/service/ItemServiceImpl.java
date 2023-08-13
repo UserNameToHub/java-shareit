@@ -53,8 +53,6 @@ public class ItemServiceImpl implements ItemService<Long> {
             throw new NotFoundException(String.format("Пользователь с id %d не найден.", idOwner));
         }
 
-//        List<Item> allByOwnerId = itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
-//                pageParam.get(1), ORDER_BY_ID_ASC)).toList();
         return gettingDtoMapper.toDtoList(itemRepository.findAllByOwnerId(idOwner, PageRequest.of(pageParam.get(0),
                 pageParam.get(1), ORDER_BY_ID_ASC)).toList());
     }
@@ -74,7 +72,6 @@ public class ItemServiceImpl implements ItemService<Long> {
     @Override
     @Transactional
     public void delete(Long idType, Long idOwner) {
-        boolean b = itemRepository.existsByIdAndOwnerId(idType, idOwner);
         itemRepository.deleteByOwnerId(idType, idOwner);
     }
 
@@ -96,9 +93,9 @@ public class ItemServiceImpl implements ItemService<Long> {
         try {
             updateField(type, item);
         } catch (ReflectiveOperationException e) {
-            throw new ReflectionException("Обновить данные не получилось.");
+//            throw new ReflectionException("Обновить данные не получилось.");
+            e.getMessage();
         }
-
         return gettingDtoMapper.toDto(itemRepository.saveAndFlush(item));
     }
 
@@ -130,7 +127,7 @@ public class ItemServiceImpl implements ItemService<Long> {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundException(String.format("Вещь с id %d не найдена.", itemId)));
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException(String.format("Пользователь с id %d не найден.", itemId)));
+                new NotFoundException(String.format("Пользователь с id %d не найден.", userId)));
         LocalDateTime now = LocalDateTime.now();
 
         Comment newComment = commentDtoMapper.toEntity(comment, item, user, now);

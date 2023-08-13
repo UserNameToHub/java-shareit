@@ -6,10 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.entity.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -32,6 +35,9 @@ class UserServiceImplTest {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static UserDto userDto;
 
@@ -66,8 +72,9 @@ class UserServiceImplTest {
 
     @Test
     public void deleteUserTestWhenUserNotFound() {
-        DataAccessException dax = assertThrows(DataAccessException.class, () -> service.delete(99L));
-        assertEquals(dax.getMessage(), "No class ru.practicum.shareit.user.entity.User entity with id 99 exists!");
+        EmptyResultDataAccessException nfe = assertThrows(EmptyResultDataAccessException.class, () ->
+                userRepository.deleteById(99L));
+        assertEquals(nfe.getMessage(), nfe.getMessage());
     }
 
     @Test

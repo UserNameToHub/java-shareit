@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.common.exception.NotFoundException;
+import ru.practicum.shareit.common.exception.UnavailableException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.entity.Comment;
@@ -25,8 +26,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(
@@ -39,7 +39,7 @@ class ItemServiceImplTest {
     private EntityManager em;
 
     @Autowired
-    private ItemServiceImpl service;
+    private ItemService service;
 
     @Autowired
     private UserService userService;
@@ -90,6 +90,14 @@ class ItemServiceImplTest {
         List<ItemDto> itemsDto = service.findAllById(1L, List.of(0, 5));
         assertEquals(itemsDto.size(), 2);
         assertEquals(itemsDto.get(0).getId(), 1L);
+    }
+
+    @Test
+    void findAllByIdWhenUserIsNotFound() {
+        NotFoundException nfe = assertThrows(NotFoundException.class, () ->
+                service.findAllById(103L, List.of(0, 1)));
+
+        assertEquals("Пользователь с id 103 не найден.", nfe.getMessage());
     }
 
     @Test
@@ -168,5 +176,48 @@ class ItemServiceImplTest {
 
         assertThat(comment.getId(), notNullValue());
         assertThat(comment.getText(), equalTo(commentDto.getText()));
+    }
+
+    @Test
+    void testCreateCommentWhenUserCanNotMakeComment() {
+        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+                .thenReturn(false);
+
+        UnavailableException ue = assertThrows(UnavailableException.class, () ->
+                service.createComment(CommentDto.builder().build(), 99L, 99L));
+
+        assertEquals("Пользователь с id 99 не может оставить отзыв вещи с id 99.", ue.getMessage());
+    }
+
+    @Test
+    void testCreateCommentWhenUserIsNotFound() {
+        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+                .thenReturn(true);
+
+        NotFoundException nfe = assertThrows(NotFoundException.class, () ->
+                service.createComment(CommentDto.builder().build(), 99L, 1L));
+
+        assertEquals("Вещь с id 99 не найдена.", nfe.getMessage());
+    }
+
+    @Test
+    void testCreateCommentWhenItemIsNotFound() {
+        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+                .thenReturn(true);
+
+        NotFoundException nfe = assertThrows(NotFoundException.class, () ->
+                service.createComment(CommentDto.builder().build(), 1L, 99L));
+
+        assertEquals("Пользователь с id 99 не найден.", nfe.getMessage());
+    }
+
+    @Test
+    void testDelete() {
+        service.delete(1L, 1L);
+
+        NotFoundException nfe = assertThrows(NotFoundException.class, () ->
+                service.findById(1L, userDto.getId()));
+
+        assertEquals("Вещь с id 1 не найдена.", nfe.getMessage());
     }
 }

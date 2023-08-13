@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.common.repository.BaseRepository;
@@ -16,11 +17,11 @@ public interface ItemRepository extends BaseRepository<Item, Long> {
     Page<Item> findByNameOrDescriptionText(@Param("search") String search, Pageable pageable);
 
     @Query("select i from Item as i " +
-//            "join fetch i.owner as o " +
             "where i.owner.id = :ownerId")
     Page<Item> findAllByOwnerId(@Param("ownerId") Long ownerId,
                                 @Param("page") Pageable pageable);
 
+    @Modifying
     @Query("delete from Item as i " +
             "where i.id = :itemId and i.owner.id = :ownerId")
     void deleteByOwnerId(@Param("itemId") Long itemId,
