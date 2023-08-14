@@ -111,11 +111,11 @@ public class BookingServiceImpl implements BookingService {
         if (userStatus.equals(UserStatus.BOOKER)) {
             switch (state) {
                 case PAST:
-                    return bookingRepository.findAllByBookerIdAndEndDateIsBefore(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllByBookerIdAndEndDateIsBefore(id, now, getPage(pageParam)).toList();
                 case FUTURE:
-                    return bookingRepository.findAllByBookerIdAndStartDateIsAfter(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllFutureByBooker(id, now, getPage(pageParam)).toList();
                 case ALL:
-                    return bookingRepository.findAllByBooker_Id(id, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllByBooker_Id(id, getPage(pageParam)).toList();
                 case CURRENT:
                     return bookingRepository.findAllCurrentByBookerId(id, now, getPage(pageParam, ORDER_BY_ID_ASC)).toList();
                 default:
@@ -125,22 +125,29 @@ public class BookingServiceImpl implements BookingService {
         } else {
             switch (state) {
                 case PAST:
-                    return bookingRepository.findAllByItemOwnerIdAndEndDateIsBefore(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllByItemOwnerIdAndEndDateIsBefore(id, now, getPage(pageParam)).toList();
                 case FUTURE:
-                    return bookingRepository.findAllByItemOwnerIdAndStartDateIsAfter(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllByItemOwnerIdAndStartDateIsAfter(id, now, getPage(pageParam)).toList();
                 case ALL:
-                    return bookingRepository.findAllByItemOwnerId(id, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllByItemOwnerId(id, getPage(pageParam)).toList();
                 case CURRENT:
-                    return bookingRepository.findAllCurrentByItemOwnerId(id, now, getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                    return bookingRepository.findAllCurrentByItemOwnerId(id, now, getPage(pageParam)).toList();
                 default:
                     return bookingRepository.findAllByItemOwnerIdAndStatusIs(id, Status.valueOf(state.toString()),
-                            getPage(pageParam, ORDER_BY_DATE_DESC)).toList();
+                            getPage(pageParam)).toList();
             }
         }
     }
 
     private Pageable getPage(List<Integer> pageParam, Sort sort) {
-        int page = pageParam.get(0) == 0 ? 0 : (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0));
-        return PageRequest.of(page, pageParam.get(1), sort);
+        return PageRequest.of(getPageNumber(pageParam), pageParam.get(1), sort);
+    }
+
+    private Pageable getPage(List pageParam) {
+        return getPage(pageParam, ORDER_BY_DATE_DESC);
+    }
+
+    private int getPageNumber(List<Integer> pageParam) {
+        return pageParam.get(0) == 0 ? 0 : (int) Math.ceil((pageParam.get(0) * 1.0) / (pageParam.get(1) * 1.0));
     }
 }

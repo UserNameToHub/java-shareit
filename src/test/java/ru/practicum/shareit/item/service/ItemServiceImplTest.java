@@ -161,7 +161,7 @@ class ItemServiceImplTest {
 
     @Test
     void testCreateComment() {
-        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+        when(bookingRepository.existsPastBookingsByIdAndAndBookerIdAnd(any(), any(), any()))
                 .thenReturn(true);
 
         CommentDto commentDto = CommentDto.builder()
@@ -180,7 +180,7 @@ class ItemServiceImplTest {
 
     @Test
     void testCreateCommentWhenUserCanNotMakeComment() {
-        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+        when(bookingRepository.existsPastBookingsByIdAndAndBookerIdAnd(any(), any(), any()))
                 .thenReturn(false);
 
         UnavailableException ue = assertThrows(UnavailableException.class, () ->
@@ -191,7 +191,7 @@ class ItemServiceImplTest {
 
     @Test
     void testCreateCommentWhenUserIsNotFound() {
-        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+        when(bookingRepository.existsPastBookingsByIdAndAndBookerIdAnd(any(), any(), any()))
                 .thenReturn(true);
 
         NotFoundException nfe = assertThrows(NotFoundException.class, () ->
@@ -202,7 +202,7 @@ class ItemServiceImplTest {
 
     @Test
     void testCreateCommentWhenItemIsNotFound() {
-        when(bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(any(), any(), any()))
+        when(bookingRepository.existsPastBookingsByIdAndAndBookerIdAnd(any(), any(), any()))
                 .thenReturn(true);
 
         NotFoundException nfe = assertThrows(NotFoundException.class, () ->

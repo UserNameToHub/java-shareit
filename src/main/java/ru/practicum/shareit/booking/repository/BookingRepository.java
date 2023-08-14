@@ -26,9 +26,9 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
 
     @Query("select bk from Booking as bk " +
             "where bk.booker.id = :id and bk.startDate > :dateTime")
-    Page<Booking> findAllByBookerIdAndStartDateIsAfter(@Param("id") Long id,
-                                                       @Param("dateTime") LocalDateTime dateTime,
-                                                       @Param("page") Pageable pageable);
+    Page<Booking> findAllFutureByBooker(@Param("id") Long id,
+                                        @Param("dateTime") LocalDateTime dateTime,
+                                        @Param("page") Pageable pageable);
 
     @Query("select bk from Booking as bk " +
             "where bk.booker.id = :id and :dateTime between bk.startDate and bk.endDate")
@@ -71,7 +71,7 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
 
     @Query("select case when count(bk) > 0 then true else false end from Booking as bk " +
             "where bk.item.id = :id and bk.booker.id = :bookerId and bk.endDate < :current")
-    boolean existsBookingsByIdAndAndBookerIdAndEndDateBefore(@Param("id") Long id,
-                                                             @Param("bookerId") Long bookerId,
-                                                             @Param("current") LocalDateTime current);
+    boolean existsPastBookingsByIdAndAndBookerIdAnd(@Param("id") Long id,
+                                                    @Param("bookerId") Long bookerId,
+                                                    @Param("current") LocalDateTime current);
 }

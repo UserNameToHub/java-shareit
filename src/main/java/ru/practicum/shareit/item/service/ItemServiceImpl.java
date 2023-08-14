@@ -118,7 +118,7 @@ public class ItemServiceImpl implements ItemService<Long> {
     @Override
     @Transactional
     public CommentDto createComment(CommentDto comment, Long itemId, Long userId) {
-        boolean isBooker = bookingRepository.existsBookingsByIdAndAndBookerIdAndEndDateBefore(itemId,
+        boolean isBooker = bookingRepository.existsPastBookingsByIdAndAndBookerIdAnd(itemId,
                 userId, LocalDateTime.now());
 
         if (!isBooker) {
