@@ -9,11 +9,11 @@ import java.util.List;
 public interface ItemService<ID> extends BaseService<ItemDto, ID> {
     ItemDto findById(Long idType, Long userId);
 
-    List<ItemDto> findAllById(ID idOwner);
+    List<ItemDto> findAllById(ID idOwner, List<Integer> pageParam);
 
-    List<ItemDto> findByText(String text);
+    List<ItemDto> findByText(String text, List<Integer> pageParam);
 
-    List<ItemDto> findByText(String text, Long owner);
+    List<ItemDto> findByText(String text, Long owner, List<Integer> pageParam);
 
     void delete(ID idType, ID idOwner);
 

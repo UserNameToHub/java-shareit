@@ -5,10 +5,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.common.validationGroup.Create;
 import ru.practicum.shareit.item.dto.*;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 
@@ -22,11 +24,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemServiceImpl service;
+    private final ItemService service;
 
     @GetMapping
-    public List<ItemDto> getAllById(@RequestHeader(HEADER_USER_ID) Long ownerId) {
-        return service.findAllById(ownerId);
+    public List<ItemDto> getAllById(@RequestHeader(HEADER_USER_ID) Long ownerId,
+                                    @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                    @RequestParam(value = "size", defaultValue = "20") @Positive Integer size) {
+        return service.findAllById(ownerId, List.of(from, size));
     }
 
     @GetMapping("/{id}")
@@ -37,8 +41,10 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getByText(@NotBlank @RequestParam("text") String textRequest,
-                                   @RequestHeader(HEADER_USER_ID) Long ownerId) {
-        return service.findByText(textRequest, ownerId);
+                                   @RequestHeader(HEADER_USER_ID) Long ownerId,
+                                   @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                   @RequestParam(value = "size", defaultValue = "20") @Positive Integer size) {
+        return service.findByText(textRequest, ownerId, List.of(from, size));
     }
 
     @PostMapping

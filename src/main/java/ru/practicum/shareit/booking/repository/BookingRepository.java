@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.booking.entity.Booking;
@@ -22,41 +22,37 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
     Optional<Booking> findByIdAndUserId(@Param("bookingId") Long bookingId,
                                         @Param("userId") Long userId);
 
-    List<Booking> findAllByBookerIdAndEndDateIsBefore(Long id, LocalDateTime dateTime, Sort sort);
+    Page<Booking> findAllByBookerIdAndEndDateIsBefore(Long id, LocalDateTime dateTime, Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-            "join fetch bk.booker as bkr " +
-            "where bkr.id = :id and bk.startDate > :dateTime")
-    List<Booking> findAllByBookerIdAndStartDateIsAfter(@Param("id") Long id,
-                                                       @Param("dateTime") LocalDateTime dateTime,
-                                                       @Param("sort") Sort sort);
+            "where bk.booker.id = :id and bk.startDate > :dateTime")
+    Page<Booking> findAllFutureByBooker(@Param("id") Long id,
+                                        @Param("dateTime") LocalDateTime dateTime,
+                                        @Param("page") Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-            "join fetch bk.booker as bkr " +
-            "where bkr.id = :id and :dateTime between bk.startDate and bk.endDate")
-    List<Booking> findAllCurrentByBookerId(@Param("id") Long id,
+            "where bk.booker.id = :id and :dateTime between bk.startDate and bk.endDate")
+    Page<Booking> findAllCurrentByBookerId(@Param("id") Long id,
                                            @Param("dateTime") LocalDateTime dateTime,
-                                           @Param("sort") Sort sort);
+                                           @Param("page") Pageable pageable);
 
-    List<Booking> findAllByBookerId(Long id, Sort sort);
+    Page<Booking> findAllByBooker_Id(Long id, Pageable pageable);
 
-    List<Booking> findAllByBookerIdAndStatusIs(Long id, Status status, Sort sort);
+    Page<Booking> findAllByBookerIdAndStatusIs(Long id, Status status, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerIdAndEndDateIsBefore(Long id, LocalDateTime dateTime, Sort sort);
+    Page<Booking> findAllByItemOwnerIdAndEndDateIsBefore(Long id, LocalDateTime dateTime, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerIdAndStartDateIsAfter(Long id, LocalDateTime dateTime, Sort sort);
+    Page<Booking> findAllByItemOwnerIdAndStartDateIsAfter(Long id, LocalDateTime dateTime, Pageable pageable);
 
     @Query("select bk from Booking as bk " +
-            "join fetch bk.item as i " +
-            "join fetch i.owner as o " +
-            "where o.id = :id and :dateTime between bk.startDate and bk.endDate")
-    List<Booking> findAllCurrentByItemOwnerId(@Param("id") Long id,
+            "where bk.item.owner.id = :id and :dateTime between bk.startDate and bk.endDate")
+    Page<Booking> findAllCurrentByItemOwnerId(@Param("id") Long id,
                                               @Param("dateTime") LocalDateTime dateTime,
-                                              @Param("sort") Sort sort);
+                                              @Param("page") Pageable pageable);
 
-    List<Booking> findAllByItemOwnerId(Long id, Sort sort);
+    Page<Booking> findAllByItemOwnerId(Long id, Pageable pageable);
 
-    List<Booking> findAllByItemOwnerIdAndStatusIs(Long id, Status status, Sort sort);
+    Page<Booking> findAllByItemOwnerIdAndStatusIs(Long id, Status status, Pageable pageable);
 
 
     @Query("select new ru.practicum.shareit.item.dto.ItemBookingGettingDto(bk.id, bk.booker.id) " +
@@ -75,7 +71,7 @@ public interface BookingRepository extends BaseRepository<Booking, Long> {
 
     @Query("select case when count(bk) > 0 then true else false end from Booking as bk " +
             "where bk.item.id = :id and bk.booker.id = :bookerId and bk.endDate < :current")
-    boolean existsBookingsByIdAndAndBookerIdAndEndDateBefore(@Param("id") Long id,
-                                                             @Param("bookerId") Long bookerId,
-                                                             @Param("current") LocalDateTime current);
+    boolean existsPastBookingsByIdAndAndBookerIdAnd(@Param("id") Long id,
+                                                    @Param("bookerId") Long bookerId,
+                                                    @Param("current") LocalDateTime current);
 }

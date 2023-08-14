@@ -15,5 +15,5 @@ public interface BookingService extends BaseService<BookingGettingDto, Long> {
 
     BookingGettingDto updateStatus(Long bookingId, Boolean boolStatus, Long ownerId);
 
-    List<BookingGettingDto> findAll(Long userId, State state, UserStatus userStatus);
+    List<BookingGettingDto> findAll(Long userId, State state, UserStatus userStatus, Integer from, Integer size);
 }

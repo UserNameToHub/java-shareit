@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingCreatingDto;
 import ru.practicum.shareit.booking.dto.BookingGettingDto;
 import ru.practicum.shareit.booking.enumeration.State;
 import ru.practicum.shareit.booking.enumeration.UserStatus;
-import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-    private final BookingServiceImpl service;
+    private final BookingService service;
 
     @PostMapping
     public BookingGettingDto create(@Valid @RequestBody BookingCreatingDto booking,
@@ -46,13 +46,17 @@ public class BookingController {
 
     @GetMapping
     public List<BookingGettingDto> getAllByBooker(@RequestParam(name = "state", defaultValue = "ALL") State state,
-                                                  @RequestHeader(HEADER_USER_ID) Long userid) {
-        return service.findAll(userid, state, UserStatus.BOOKER);
+                                                  @RequestHeader(HEADER_USER_ID) Long userid,
+                                                  @RequestParam(value = "from", defaultValue = "0")  final int from,
+                                                  @RequestParam(value = "size", defaultValue = "20") final int size) {
+        return service.findAll(userid, state, UserStatus.BOOKER, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingGettingDto> getAllByOwner(@RequestParam(name = "state", defaultValue = "ALL") State state,
-                                                 @RequestHeader(HEADER_USER_ID) Long userid) {
-        return service.findAll(userid, state, UserStatus.OWNER);
+                                                 @RequestHeader(HEADER_USER_ID) Long userid,
+                                                 @RequestParam(value = "from", defaultValue = "0") final int from,
+                                                 @RequestParam(value = "size", defaultValue = "20") final int size) {
+        return service.findAll(userid, state, UserStatus.OWNER, from, size);
     }
 }
