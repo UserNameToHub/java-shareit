@@ -5,9 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.request.dto.RequestDto;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
@@ -23,7 +20,7 @@ public class RequestController {
     private final RequestService service;
 
     @PostMapping
-    private RequestDto create(@RequestBody @Valid RequestDto request,
+    private RequestDto create(@RequestBody RequestDto request,
                               @RequestHeader(HEADER_USER_ID) Long userId) {
         return service.create(request, userId);
     }
@@ -34,8 +31,8 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    private List<RequestDto> getAll(@RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                    @RequestParam(value = "size", defaultValue = "1") @Positive Integer size,
+    private List<RequestDto> getAll(@RequestParam(value = "from", defaultValue = "0") Integer from,
+                                    @RequestParam(value = "size", defaultValue = "1") Integer size,
                                     @RequestHeader(HEADER_USER_ID) long userId) {
         return service.getAll(from, size, userId);
     }

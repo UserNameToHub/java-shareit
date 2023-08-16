@@ -5,11 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.common.repository.BaseRepository;
 import ru.practicum.shareit.item.entity.Item;
 
 import java.util.List;
 
+@Repository
 public interface ItemRepository extends BaseRepository<Item, Long> {
     @Query("select i from Item as i " +
             "where i.available is true and :search <> '' and (upper(i.name) like concat('%', upper(:search), '%') " +

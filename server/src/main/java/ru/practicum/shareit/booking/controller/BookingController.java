@@ -8,9 +8,6 @@ import ru.practicum.shareit.booking.enumeration.State;
 import ru.practicum.shareit.booking.enumeration.UserStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import java.util.List;
 
 import static ru.practicum.shareit.util.Constants.HEADER_USER_ID;
@@ -25,8 +22,8 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public BookingGettingDto create(@Valid @RequestBody BookingCreatingDto booking,
-                                    @NotNull @RequestHeader(HEADER_USER_ID) Long userId) {
+    public BookingGettingDto create(@RequestBody BookingCreatingDto booking,
+                                    @RequestHeader(HEADER_USER_ID) Long userId) {
         booking.setBookerId(userId);
         return service.create(booking);
     }
