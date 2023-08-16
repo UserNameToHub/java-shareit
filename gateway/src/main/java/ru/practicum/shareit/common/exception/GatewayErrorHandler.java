@@ -17,4 +17,11 @@ public class GatewayErrorHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("errorMessage", ex.getMessage()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<?> handleException(IllegalArgumentException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", ex.getMessage()));
+    }
 }
