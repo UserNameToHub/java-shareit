@@ -37,7 +37,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getByText(String text, Long ownerId) {
-        Map<String, Object> parameters = Map.of("Text", text);
+        Map<String, Object> parameters = Map.of("text", text);
         return get("/search?text={text}", ownerId, parameters);
     }
 

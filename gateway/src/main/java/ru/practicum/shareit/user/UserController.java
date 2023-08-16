@@ -14,6 +14,7 @@ import ru.practicum.shareit.common.validation.validationGroup.Update;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
+@ControllerAdvice(value = "GatewayErrorHandler")
 public class UserController {
     private final UserClient userClient;
 

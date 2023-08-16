@@ -23,7 +23,7 @@ public class UserClient extends BaseClient {
     }
 
     ResponseEntity<Object> getAll() {
-        return getAll();
+        return get("");
     }
 
     ResponseEntity<Object> getById(Long id) {

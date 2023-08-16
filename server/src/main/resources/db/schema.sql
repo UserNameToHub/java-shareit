@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS items;
-DROP TABLE IF EXISTS requests;
-DROP TABLE IF EXISTS bookings;
-DROP TABLE IF EXISTS comments;
+-- DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS items;
+-- DROP TABLE IF EXISTS requests;
+-- DROP TABLE IF EXISTS bookings;
+-- DROP TABLE IF EXISTS comments;
 
-create table if not exists users
+create table if not exists USERS
 (
     id    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,

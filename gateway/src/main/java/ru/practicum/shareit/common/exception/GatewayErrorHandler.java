@@ -1,18 +1,20 @@
 package ru.practicum.shareit.common.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.Map;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GatewayErrorHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> methodArgumentNotValidExceptionHandler(final RuntimeException e) {
-        return Map.of("errorMessage", e.getMessage());
+    protected ResponseEntity<?> handleException(MethodArgumentNotValidException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("errorMessage", ex.getMessage()));
     }
 }

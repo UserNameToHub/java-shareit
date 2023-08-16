@@ -20,7 +20,8 @@ import static ru.practicum.shareit.common.util.Constatns.HEADER_USER_ID;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
+//@Validated
+@ControllerAdvice(value = "GatewayErrorHandler")
 public class BookingController {
     private final BookingClient bookingClient;
 
