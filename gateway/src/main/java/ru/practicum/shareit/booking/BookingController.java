@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
@@ -20,7 +19,6 @@ import static ru.practicum.shareit.common.util.Constatns.HEADER_USER_ID;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
-//@Validated
 @ControllerAdvice(value = "GatewayErrorHandler")
 public class BookingController {
     private final BookingClient bookingClient;
