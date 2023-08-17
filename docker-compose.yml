@@ -20,7 +20,7 @@ services:
     depends_on:
       - db
     environment:
-      - TZ=Europe/Moscow
+#      - TZ=Europe/Moscow
       - DB_NAME=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
@@ -33,6 +33,7 @@ services:
     ports:
       - "6541:5432"
     environment:
+#      - TZ=Europe/Moscow
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
