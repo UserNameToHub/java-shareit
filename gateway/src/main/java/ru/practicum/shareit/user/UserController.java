@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.common.validation.validationGroup.Create;
 import ru.practicum.shareit.common.validation.validationGroup.Update;
+import ru.practicum.shareit.user.service.UserService;
 
 @Controller
 @RequestMapping(path = "/users")
@@ -16,35 +17,31 @@ import ru.practicum.shareit.common.validation.validationGroup.Update;
 @Slf4j
 @ControllerAdvice(value = "GatewayErrorHandler")
 public class UserController {
-    private final UserClient userClient;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Object> getAll() {
-        log.info("Get all users.");
-        return userClient.getAll();
+        return userService.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id) {
-        log.info("Get user with id {}", id);
-        return userClient.getById(id);
+        return userService.getById(id);
     }
 
     @PostMapping
     public ResponseEntity<Object> create(@Validated(Create.class) @RequestBody UserDto user) {
-        log.info("Creating user with name {}, email {}", user.getName(), user.getEmail());
-        return userClient.create(user);
+        return userService.create(user);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> edit(@Validated(Update.class) @RequestBody UserDto user, @PathVariable Long id) {
         log.info("Editing user.");
-        return userClient.edit(user, id);
+        return userService.edit(user, id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object>  delete(@PathVariable Long id) {
-        log.info("Deleting user with id {}", id);
-        return userClient.delete(id);
+        return userService.delete(id);
     }
 }

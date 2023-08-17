@@ -41,7 +41,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         service.delete(id);
-//        return String.format("Пользователь c id %d был успешно удален.", id);
             return ResponseEntity.status(200).build();
     }
 }

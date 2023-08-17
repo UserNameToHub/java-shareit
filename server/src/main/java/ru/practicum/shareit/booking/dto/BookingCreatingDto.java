@@ -21,9 +21,9 @@ public class BookingCreatingDto {
 
     private Long itemId;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
+//    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime start;
 
-    @JsonFormat(pattern = DATE_TIME_PATTERN)
+//    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime end;
 }

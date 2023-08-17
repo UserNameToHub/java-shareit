@@ -63,8 +63,6 @@ public class BaseClient {
         return patch(path, userId, null, body);
     }
 
-    // marker
-
     protected <T> ResponseEntity<Object> patch(String path, long userId, @Nullable Map<String, Object> parameters) {
         return patch(path, userId, parameters, null);
     }
