@@ -10,30 +10,31 @@ import ru.practicum.shareit.user.dto.UserDto;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImp {
+public class UserServiceImp implements UserService {
     private final UserClient userClient;
 
-    ResponseEntity<Object> getAll() {
+    @Override
+    public ResponseEntity<Object> getAll() {
         log.info("Get all users.");
         return userClient.getAll();
     }
 
-    ResponseEntity<Object> getById(Long id) {
+    public ResponseEntity<Object> getById(Long id) {
         log.info("Get user with id {}", id);
         return userClient.getById(id);
     }
 
-    ResponseEntity<Object> create(UserDto user) {
+    public ResponseEntity<Object> create(UserDto user) {
         log.info("Creating user with name {}, email {}", user.getName(), user.getEmail());
         return userClient.create(user);
     }
 
-    ResponseEntity<Object> edit(UserDto user, Long userId) {
+    public ResponseEntity<Object> edit(UserDto user, Long userId) {
         log.info("Edit user with id {}", user);
         return userClient.edit(user, userId);
     }
 
-    ResponseEntity<Object> delete(Long userId) {
+    public ResponseEntity<Object> delete(Long userId) {
         log.info("Deleting user with id {}", userId);
         return userClient.delete(userId);
     }
