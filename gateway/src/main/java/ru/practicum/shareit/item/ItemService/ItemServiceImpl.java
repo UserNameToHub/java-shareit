@@ -11,7 +11,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final ItemClient itemClient;
 
     public ResponseEntity<Object> getAllById(Long ownerId) {
