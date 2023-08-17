@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RequestServiceImp implements RequestService{
+public class RequestServiceImp implements RequestService {
     private final RequestClient requestClient;
 
     public ResponseEntity<Object> create(RequestDto request, Long userId) {
