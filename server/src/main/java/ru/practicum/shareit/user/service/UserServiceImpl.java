@@ -31,12 +31,12 @@ public class UserServiceImpl implements UserService<Long> {
     @Override
     @Transactional
     public void delete(Long idType) {
-        try {
-            repository.deleteById(idType);
-        } catch (DataIntegrityViolationException e) {
+        if (!repository.existsById(idType)) {
             throw new NotFoundException(String.format("Операция удаления не выполнена, т.к. пользователь с id %d не найден.",
                     idType));
         }
+
+        repository.deleteById(idType);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -38,8 +39,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         service.delete(id);
-        return String.format("Пользователь c id %d был успешно удален.", id);
+//        return String.format("Пользователь c id %d был успешно удален.", id);
+            return ResponseEntity.status(200).build();
     }
 }

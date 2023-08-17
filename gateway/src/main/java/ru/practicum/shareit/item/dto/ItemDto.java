@@ -23,6 +23,9 @@ public class ItemDto {
     @NotNull(message = "Данное поле не может быть пустым.", groups = Create.class)
     private Boolean available;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long requestId;
+
     private ItemBookingGettingDto lastBooking;
     private ItemBookingGettingDto nextBooking;
 
