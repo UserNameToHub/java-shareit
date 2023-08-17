@@ -17,12 +17,10 @@ public class BookItemRequestDto {
 	private long itemId;
 
 	@NotNull
-//	@JsonFormat(pattern = DATE_TIME_PATTERN)
 	@FutureOrPresent
 	private LocalDateTime start;
 
 	@NotNull
-//	@JsonFormat(pattern = DATE_TIME_PATTERN)
 	@Future
 	private LocalDateTime end;
 }
