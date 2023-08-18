@@ -40,7 +40,7 @@ public class WebClientConfiguration {
     @Bean
     public ItemClient itemClient(RestTemplateBuilder builder) {
         var restTemplate = builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + "/requests"))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + "/items"))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
 
@@ -50,7 +50,7 @@ public class WebClientConfiguration {
     @Bean
     public BookingClient bookingClient(RestTemplateBuilder builder) {
         var restTemplate = builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + "/requests"))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + "/bookings"))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
 
